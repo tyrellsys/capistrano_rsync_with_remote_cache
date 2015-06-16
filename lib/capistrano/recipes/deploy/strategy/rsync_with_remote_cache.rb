@@ -44,7 +44,8 @@ module Capistrano
         end
 
         def sync_source_to(server)
-          run_rsync(rsync_options, exclusion_options, "--rsh='#{ssh_command_for(server)}'", "'#{local_cache_path}/'", "#{rsync_host(server)}:#{repository_cache_path}/", :local => true)
+#          run_rsync(rsync_options, exclusion_options, "--rsh='#{ssh_command_for(server)}'", "'#{local_cache_path}/'", "#{rsync_host(server)}:#{repository_cache_path}/", :local => true)
+            "rsync #{rsync_options} --rsh='ssh -p #{ssh_port(server)}#{" -o \"ProxyCommand ssh #{configuration[:gateway]} nc -w300 %h %p\"" if configuration[:gateway]}' #{local_cache_path}/ #{rsync_host(server)}:#{repository_cache_path}/"
         end
 
         def mark_local_cache
